@@ -22,11 +22,11 @@ char* get_hash( char* str, int len){
 char* seal_data(uint8_t * buffer, uint32_t buffer_length) {
 	printf("\nSealing data..");
 	int32_t need_len;
-	sgx_sealed_data_t* sealed_buf = (sgx_sealed_data_t * ) malloc(20480);
 	need_len = sgx_calc_sealed_data_size(0, buffer_length);
+	sgx_sealed_data_t* sealed_buf = (sgx_sealed_data_t * ) malloc(need_len);
 
-	if (need_len > 20408) {
-		printf("\n Buffer size is smaller to hold sealed data.\n");
+	if (need_len == 0xFFFFFFFF) {
+		printf("\n sgx_calc_sealed_data_size FAILED.\n");
 		return NULL;
 	}
 	if (sgx_seal_data(0, NULL, buffer_length, buffer, need_len, (sgx_sealed_data_t *) sealed_buf)) {
